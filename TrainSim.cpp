@@ -1,8 +1,11 @@
 #include "pch.h"
 #include <iostream>
 
+#include "Train.h"
+
 int main()
 {
-    std::cout << "Init"; 
+	Train train1(9786);
+    std::cout << train1.getID(); 
 }
 

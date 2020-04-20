@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+TrainSim.vcxproj.filters
+TrainSim.vcxproj
+Debug/vc141.pdb
+Debug/vc141.idb
+Debug/TrainSim.tlog/link.write.1.tlog
+Debug/TrainSim.tlog/link.read.1.tlog
+Debug/TrainSim.tlog/CL.read.1.tlog
