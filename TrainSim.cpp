@@ -1,16 +1,15 @@
 #include "pch.h"
 #include <iostream>
 
-#include "Train.h"
-#include "Station.h"
+#include "World.h"
+
+using namespace std;
 
 int main()
 {
-	Train train1(9786);
-    std::cout << train1.getID(); 
+	World world;
 
-	Station Gyor("Gyor", 7);
+	world.Write();
 
-	std::cout << Gyor.getName() << " allomason " << Gyor.getLines() << " vagany van";
 }
 

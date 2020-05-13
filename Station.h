@@ -4,17 +4,17 @@
 class Station
 {
 	std::string name;
-	int lines;
+	int platforms;
 
 public:
-	Station(std::string nm, int lin) : name{ nm }, lines{ lin }
+	Station(std::string nm, int plat) : name{ nm }, platforms{ plat }
 	{
 
 	}
 
-	int getLines()
+	int getPlatforms()
 	{
-		return lines;
+		return platforms;
 	}
 	
 	std::string getName()
