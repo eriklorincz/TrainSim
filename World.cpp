@@ -2,54 +2,73 @@
 #include "World.h"
 
 #include <iostream>
+#include <string>
+#include <memory>
+#include <fstream>
 
+using namespace std;
 
 World::World()
 {
-	Station Sopron("Sopron", 4);
-	stations.push_back(Sopron);
+	string station_name;
+	int station_platforms;
+	int time_between;
+	std::shared_ptr<Place> temp = nullptr;
 
-	Station Fertoszentmiklos("Fertoszentmiklos", 4);
-	stations.push_back(Fertoszentmiklos);
+	ifstream ReadFile("StationList.txt");
 
-	Station Petohaza("Petohaza", 2);
-	stations.push_back(Petohaza);
+	//read the station parameters from the given file, and set up the World
+	int counter = 0;
+	while (ReadFile >> station_name >> time_between >> station_platforms)
+	{
+		//create a new station dynamically 
+		stations.push_back(std::make_shared<Station>(nullptr, temp, station_name, station_platforms));
 
-	Station Kapuvar("Kapuvar", 3);
-	stations.push_back(Kapuvar);
+		if (counter != 0)
+		{
+			temp->setNext(stations[counter]);
+		}
+		
+		//create as many Railways, as time is needed (in minutes) to get to the next station
+		temp = stations[counter];
+		for (int i = 0; i < time_between; i++)
+		{
+			temp->setNext(std::make_shared<Railway>(nullptr, temp));
+			temp = temp->getNext();
+		}
 
-	Station Szarfold("Szarfold", 1);
-	stations.push_back(Szarfold);
+		counter++;
+	}
 
-	Station Rabatamasi("Rabatamasi", 2);
-	stations.push_back(Rabatamasi);
 
-	Station Farad("Farad", 1);
-	stations.push_back(Farad);
+	ReadFile.close();
 
-	Station Csorna("Csorna", 3);
-	stations.push_back(Csorna);
-
-	Station Kony("Kony", 2);
-	stations.push_back(Kony);
-
-	Station Enese("Enese", 2);
-	stations.push_back(Enese);
-
-	Station Rabapatona("Rabapatona", 1);
-	stations.push_back(Rabapatona);
-
-	Station Ikreny("Ikreny", 2);
-	stations.push_back(Ikreny);
-
-	Station Gyor("Gyor", 2);
-	stations.push_back(Gyor);
 }
 
 void World::Write()
 {
+	//checking if everything is OK
 	for (auto i : stations)
 	{
-		std::cout << i.getName() << " station has " << i.getPlatforms() << " platforms" << std::endl;
+		cout << i->getName() << " station has " << i->getPlatforms() << " platforms" << endl;
+	}
+	cout << endl;
+
+	//Basic visualization of the world, may change with time or be completely removed
+	shared_ptr<Place>iter = stations[0];
+
+	while (iter != nullptr)
+	{
+		auto variable = dynamic_pointer_cast<Station>(iter);
+
+		if (variable)
+		{
+			cout << variable->getName();
+		}
+		else
+		{
+			cout << "-";
+		}
+		iter = iter->getNext();
 	}
 }

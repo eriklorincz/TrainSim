@@ -7,7 +7,7 @@
 
 class World
 {
-	std::vector<Station> stations;
+	std::vector<std::shared_ptr<Station>> stations;
 
 public:
 
