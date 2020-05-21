@@ -2,6 +2,8 @@
 #include <string>
 #include <memory>
 
+class Train;
+
 //abstract class for interface use
 class Place
 {
@@ -10,6 +12,8 @@ protected:
 	std::shared_ptr<Place> next;
 	std::shared_ptr<Place> previous;
 
+	std::shared_ptr<Train> train;
+
 public:
 	Place(std::shared_ptr<Place> n, std::shared_ptr<Place> p) : next {n}, previous {p}
 	{
@@ -17,6 +21,11 @@ public:
 	}
 
 	virtual ~Place() = default;
+	
+	//TODO
+	//operator << made virtual to show symbol or name in the children 
+
+	virtual std::string print() = 0;
 
 	std::shared_ptr<Place> getNext()
 	{
@@ -38,6 +47,16 @@ public:
 		previous = p;
 	}
 
+	void trainArrived(std::shared_ptr<Train> trn)
+	{
+		train = trn;
+	}
+
+	void trainDeparts()
+	{
+		train.reset();
+	}
+
 };
 
 //Fragments of the distance between stations
@@ -47,6 +66,18 @@ public:
 	Railway(std::shared_ptr<Place> n, std::shared_ptr<Place> p) : Place{ n, p }
 	{
 
+	}
+
+	std::string print() override
+	{
+		if (train)
+		{
+			return "T";
+		}
+		else
+		{
+			return "-";
+		}
 	}
 };
 
@@ -75,6 +106,11 @@ public:
 	}
 	
 	std::string getName()
+	{
+		return name;
+	}
+
+	std::string print() override
 	{
 		return name;
 	}

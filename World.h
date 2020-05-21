@@ -14,4 +14,6 @@ public:
 	World();
 
 	void Write();
+
+	void simulate();
 };

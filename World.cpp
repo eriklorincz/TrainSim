@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "World.h"
+#include "Train.h"
 
 #include <iostream>
 #include <string>
@@ -29,7 +30,7 @@ World::World()
 			temp->setNext(stations[counter]);
 		}
 		
-		//create as many Railways, as time is needed (in minutes) to get to the next station
+		//create as many Railway parts, as time is needed (in minutes) to get to the next station
 		temp = stations[counter];
 		for (int i = 0; i < time_between; i++)
 		{
@@ -43,21 +44,33 @@ World::World()
 
 	ReadFile.close();
 
+	simulate();
 }
 
 void World::Write()
 {
+	cout << endl;
 	//checking if everything is OK
-	for (auto i : stations)
+	/*for (auto i : stations)
 	{
 		cout << i->getName() << " station has " << i->getPlatforms() << " platforms" << endl;
 	}
-	cout << endl;
+	cout << endl;*/
 
 	//Basic visualization of the world, may change with time or be completely removed
 	shared_ptr<Place>iter = stations[0];
 
 	while (iter != nullptr)
+	{
+		cout << iter->print();
+		iter = iter->getNext();
+	}
+
+	cout << endl;
+	cout << endl;
+
+
+	/*while (iter != nullptr)
 	{
 		auto variable = dynamic_pointer_cast<Station>(iter);
 
@@ -70,5 +83,23 @@ void World::Write()
 			cout << "-";
 		}
 		iter = iter->getNext();
+	}*/
+}
+
+void World::simulate()
+{
+	auto train1 = std::make_shared<Train>(0);
+	train1->setPlace(stations[0]);
+
+	while (train1->getPlace() != stations[stations.size()-1])
+	{
+		train1->getPlace()->trainDeparts();
+		train1->setPlace(train1->getPlace()->getNext());
+		train1->getPlace()->trainArrived(train1);
+
+		Write();
+
+		
 	}
+
 }
