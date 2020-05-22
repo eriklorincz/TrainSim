@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -68,38 +69,82 @@ void World::Write()
 
 	cout << endl;
 	cout << endl;
-
-
-	/*while (iter != nullptr)
-	{
-		auto variable = dynamic_pointer_cast<Station>(iter);
-
-		if (variable)
-		{
-			cout << variable->getName();
-		}
-		else
-		{
-			cout << "-";
-		}
-		iter = iter->getNext();
-	}*/
 }
 
 void World::simulate()
 {
-	auto train1 = std::make_shared<Train>(0);
-	train1->setPlace(stations[0]);
+	int i = 0;
+	int idnum = 0;
 
-	while (train1->getPlace() != stations[stations.size()-1])
+	while (i < 200)
 	{
-		train1->getPlace()->trainDeparts();
-		train1->setPlace(train1->getPlace()->getNext());
-		train1->getPlace()->trainArrived(train1);
+		if (i % 60 == 0)
+		{
+			auto train1 = make_shared<Train>(idnum, 0);
+			train1->setPlace(stations[0]);
+			trains.push_back(train1);
 
-		Write();
+			train1.reset();
+
+			train1 = std::make_shared<Train>(idnum + 1, 1);
+			train1->setPlace(stations[stations.size() - 1]);
+			trains.push_back(train1);
+
+			train1.reset();
+
+			idnum += 2;
+		}
 
 		
+		for (auto train : trains)
+		{
+			moveTrain(train);
+		}
+
+		//deleting trains that are arrived to the opposite final destination
+		for (int j = 0; j < trains.size(); j++)
+		{
+			if (trains[j]->getDir() == 0)
+			{
+				if (trains[j]->getPlace()->getNext() == nullptr)
+				{
+					trains[j].reset();
+					trains.erase(trains.begin() + j);
+					j--;
+				}
+			}
+			else
+			{
+				if (trains[j]->getPlace()->getPrev() == nullptr)
+				{
+					trains[j].reset();
+					trains.erase(trains.begin() + j);
+					j--;
+				}
+			}
+
+		}
+
+		Write();
+		i++;
+	}
+
+}
+
+//step one place with the train in the direction
+void World::moveTrain(std::shared_ptr<Train> trn)
+{
+	trn->getPlace()->trainDeparts();
+
+	if (trn->getDir() == 0)
+	{
+		trn->setPlace(trn->getPlace()->getNext());
+		trn->getPlace()->trainArrived(trn);
+	}
+	else
+	{
+		trn->setPlace(trn->getPlace()->getPrev());
+		trn->getPlace()->trainArrived(trn);
 	}
 
 }

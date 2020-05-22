@@ -8,6 +8,7 @@
 class World
 {
 	std::vector<std::shared_ptr<Station>> stations;
+	std::vector<std::shared_ptr<Train>> trains;
 
 public:
 
@@ -16,4 +17,6 @@ public:
 	void Write();
 
 	void simulate();
+
+	void moveTrain(std::shared_ptr<Train> trn);
 };

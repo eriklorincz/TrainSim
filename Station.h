@@ -21,9 +21,7 @@ public:
 	}
 
 	virtual ~Place() = default;
-	
-	//TODO
-	//operator << made virtual to show symbol or name in the children 
+	 
 
 	virtual std::string print() = 0;
 
@@ -88,10 +86,6 @@ class Station : public Place
 private:
 	std::string name;
 	int platforms;
-
-	//short timeToNext;
-	//short timeToPrev;
-
 
 
 public:
