@@ -78,6 +78,7 @@ void World::simulate()
 
 	while (i < 200)
 	{
+		//starting trains every hour
 		if (i % 60 == 0)
 		{
 			auto train1 = make_shared<Train>(idnum, 0);
@@ -101,7 +102,7 @@ void World::simulate()
 			moveTrain(train);
 		}
 
-		//deleting trains that are arrived to the opposite final destination
+		//deleting trains that have arrived to the opposite final destination
 		for (int j = 0; j < trains.size(); j++)
 		{
 			if (trains[j]->getDir() == 0)
@@ -134,15 +135,74 @@ void World::simulate()
 //step one place with the train in the direction
 void World::moveTrain(std::shared_ptr<Train> trn)
 {
-	trn->getPlace()->trainDeparts();
 
+	//left to right
 	if (trn->getDir() == 0)
 	{
+
+		//testing for other trains on track
+		auto test1 = dynamic_pointer_cast<Station> (trn->getPlace());
+
+		if (test1)
+		{
+			auto test2 = trn->getPlace();
+			do
+			{
+				test2 = test2->getNext();
+
+				test1 = dynamic_pointer_cast<Station> (test2);
+
+				if (test1)
+				{
+					break;
+				}
+
+				
+				if (test2->trainPresent())
+				{
+					return;
+				}
+				
+				
+			} while (!test1);
+		}
+
+		trn->getPlace()->trainDeparts();
 		trn->setPlace(trn->getPlace()->getNext());
 		trn->getPlace()->trainArrived(trn);
 	}
+	//right to left
 	else
 	{
+		//testing for other trains on track
+		auto test1 = dynamic_pointer_cast<Station> (trn->getPlace());
+
+		if (test1)
+		{
+			
+			auto test2 = trn->getPlace();
+			do
+			{
+				test2 = test2->getPrev();
+
+				test1 = dynamic_pointer_cast<Station> (test2);
+
+				if (test1)
+				{
+					break;
+				}
+
+				
+				if (test2->trainPresent())
+				{
+					return;
+				}
+				test1 = dynamic_pointer_cast<Station> (test2);
+
+			} while (!test1);
+		}
+
+		trn->getPlace()->trainDeparts();
 		trn->setPlace(trn->getPlace()->getPrev());
 		trn->getPlace()->trainArrived(trn);
 	}

@@ -55,6 +55,18 @@ public:
 		train.reset();
 	}
 
+	bool trainPresent()
+	{
+		if (train)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 };
 
 //Fragments of the distance between stations
@@ -70,6 +82,10 @@ public:
 	{
 		if (train)
 		{
+			if (train->getDir() == 1)
+			{
+				return "K";
+			}
 			return "T";
 		}
 		else
