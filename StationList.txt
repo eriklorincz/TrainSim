@@ -8,6 +8,6 @@ Farad 3 1
 Csorna 6 2
 Kony 4 1
 Enese 2 1
-Rabapatona 5 1
+Rabapatona 5 2
 Ikreny 8 1
 Gyor 0 3

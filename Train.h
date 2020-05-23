@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 class Place;
 
@@ -9,10 +10,11 @@ class Train
 	int ID;
 	std::shared_ptr<Place> place;
 	short dir; //direction of the train  0 : left to right; 1: right to left
+	std::string startName; //name of the starting station
 
 public:
 
-	Train(int id, short dr) : ID{ id }, dir{ dr }
+	Train(int id, short dr, std::string sn) : ID{ id }, dir{ dr }, startName { sn }
 	{
 
 	}
@@ -35,5 +37,10 @@ public:
 	short getDir()
 	{
 		return dir;
+	}
+
+	std::string getStart()
+	{
+		return startName;
 	}
 };

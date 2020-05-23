@@ -2,6 +2,8 @@
 #include <string>
 #include <memory>
 
+#include <optional>
+
 class Train;
 
 //abstract class for interface use
@@ -12,7 +14,7 @@ protected:
 	std::shared_ptr<Place> next;
 	std::shared_ptr<Place> previous;
 
-	std::shared_ptr<Train> train;
+	std::optional<std::shared_ptr<Train>> train;
 
 public:
 	Place(std::shared_ptr<Place> n, std::shared_ptr<Place> p) : next {n}, previous {p}
@@ -45,17 +47,17 @@ public:
 		previous = p;
 	}
 
-	void trainArrived(std::shared_ptr<Train> trn)
+	virtual void trainArrived(std::shared_ptr<Train> trn)
 	{
 		train = trn;
 	}
 
-	void trainDeparts()
+	virtual void trainDeparts()
 	{
 		train.reset();
 	}
 
-	bool trainPresent()
+	virtual bool trainPresent()
 	{
 		if (train)
 		{
@@ -70,7 +72,7 @@ public:
 };
 
 //Fragments of the distance between stations
-class Railway : public Place
+class Railway final : public Place
 {
 public:
 	Railway(std::shared_ptr<Place> n, std::shared_ptr<Place> p) : Place{ n, p }
@@ -82,7 +84,7 @@ public:
 	{
 		if (train)
 		{
-			if (train->getDir() == 1)
+			if (train.value()->getDir() == 1)
 			{
 				return "K";
 			}
@@ -96,7 +98,7 @@ public:
 };
 
 //Stations, where trains will stop by schedule or to wait for other trains
-class Station : public Place
+class Station final : public Place
 {
 
 private:
@@ -105,7 +107,7 @@ private:
 
 
 public:
-	Station(std::shared_ptr<Place> n, std::shared_ptr<Place> p, std::string nm, int plat) : Place{n, p}, name { nm }, platforms{ plat }
+	Station(std::shared_ptr<Place> n, std::shared_ptr<Place> p, std::string nm, int plat) : Place{ n, p }, name{ nm }, platforms{ plat }
 	{
 
 	}
@@ -114,7 +116,7 @@ public:
 	{
 		return platforms;
 	}
-	
+
 	std::string getName()
 	{
 		return name;
